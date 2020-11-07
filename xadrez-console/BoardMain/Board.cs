@@ -19,5 +19,11 @@ namespace BoardMain
         {
             return _Pieces[lines, columns];
         }
+
+        public void PutPiece(Piece p, Position pos) 
+        {
+            _Pieces[pos.Line, pos.Column] = p;
+            p.Position = pos;
+        }
     }
 }

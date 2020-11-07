@@ -5,10 +5,10 @@
         public int Column { get; set; }
         public int Line { get; set; }
 
-        public Position(int column, int line) 
+        public Position(int line, int column) 
         {
-            Column = column;
             Line = line;
+            Column = column;
         }
 
         public override string ToString()
