@@ -1,4 +1,6 @@
-﻿namespace BoardMain
+﻿using System.ComponentModel;
+
+namespace BoardMain
 {
     class Board
     {
@@ -11,6 +13,11 @@
             Columns = columns;
             Lines = lines;
             _Pieces = new Piece[lines, columns];
+        }
+
+        public Piece Piece(int lines, int columns) 
+        {
+            return _Pieces[lines, columns];
         }
     }
 }
