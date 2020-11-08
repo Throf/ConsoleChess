@@ -28,9 +28,19 @@ namespace Chess
 
         private void PutPiece()
         {
-            Board.PutPiece(new Pawn(Colors.Black, Board), new ChessPosition('c', 1).ToPosition());
-            Board.PutPiece(new King(Colors.White, Board), new ChessPosition('d', 4).ToPosition());
-            Board.PutPiece(new Queen(Colors.Black, Board), new ChessPosition('a', 3).ToPosition());
+            Board.PutPiece(new Rook(Colors.White, Board), new ChessPosition('c', 2).ToPosition());
+            Board.PutPiece(new Rook(Colors.White, Board), new ChessPosition('d', 2).ToPosition());
+            Board.PutPiece(new Rook(Colors.White, Board), new ChessPosition('e', 2).ToPosition());
+            Board.PutPiece(new Bishop(Colors.White, Board), new ChessPosition('c', 1).ToPosition());
+            Board.PutPiece(new King(Colors.White, Board), new ChessPosition('d', 1).ToPosition());
+            Board.PutPiece(new Bishop(Colors.White, Board), new ChessPosition('e', 1).ToPosition());
+            
+            Board.PutPiece(new Rook(Colors.Black, Board), new ChessPosition('c', 7).ToPosition());
+            Board.PutPiece(new Rook(Colors.Black, Board), new ChessPosition('d', 7).ToPosition());
+            Board.PutPiece(new Rook(Colors.Black, Board), new ChessPosition('e', 7).ToPosition());
+            Board.PutPiece(new Bishop(Colors.Black, Board), new ChessPosition('c', 8).ToPosition());
+            Board.PutPiece(new King(Colors.Black, Board), new ChessPosition('d', 8).ToPosition());
+            Board.PutPiece(new Bishop(Colors.Black, Board), new ChessPosition('e', 8).ToPosition());
         }
     }
 }
