@@ -1,6 +1,6 @@
 ﻿namespace BoardMain
 {
-    enum Colors
+    public enum Colors
     {
         White,
         Black,

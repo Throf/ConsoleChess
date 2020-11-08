@@ -1,6 +1,6 @@
 ﻿namespace BoardMain
 {
-    class Piece
+    public class Piece
     {
         public Position Position { get; set; }
         public Colors Color{get; protected set;}
@@ -13,6 +13,11 @@
             Color = color;
             Board = board;
             AmountMovement = 0;
+        }
+
+        public void IncreaseMovement()
+        {
+            AmountMovement++;
         }
     }
 }
