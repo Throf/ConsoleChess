@@ -12,16 +12,12 @@ namespace xadrez_console
             {
                 ChessMatch chessMatch = new ChessMatch();
                 
-                while (!chessMatch.ended)
+                while (!chessMatch.Ended)
                 {
                     try
                     {
                         Console.Clear();
-                        Screen.PrintBoard(chessMatch.Board);
-                        Console.WriteLine();
-
-                        Console.WriteLine("Turn: " + chessMatch.Turn);
-                        Console.WriteLine("Waiting for: " + chessMatch.ActualPlayer);
+                        Screen.PrintMatch(chessMatch);
 
                         Console.Write("Origin: ");
                         Position origin = Screen.ReadChessPosition().ToPosition();
