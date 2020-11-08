@@ -11,26 +11,45 @@ namespace xadrez_console
             try
             {
                 ChessMatch chessMatch = new ChessMatch();
-
+                
                 while (!chessMatch.ended)
                 {
-                    Console.Clear();
-                    Screen.PrintBoard(chessMatch.Board);
+                    try
+                    {
+                        Console.Clear();
+                        Screen.PrintBoard(chessMatch.Board);
+                        Console.WriteLine();
 
-                    Console.WriteLine();
-                    
-                    Console.Write("Origin: ");
-                    Position origin = Screen.ReadChessPosition().ToPosition();
+                        Console.WriteLine("Turn: " + chessMatch.Turn);
+                        Console.WriteLine("Waiting for: " + chessMatch.ActualPlayer);
 
-                    bool[,] possiblePositions = chessMatch.Board.Piece(origin).PossibleMoves();
-                    
-                    Console.Clear();
-                    Screen.PrintBoard(chessMatch.Board, possiblePositions);
-                    
-                    Console.Write("Destination: ");
-                    Position destination = Screen.ReadChessPosition().ToPosition();
-                    
-                    chessMatch.ExecuteMoviment(origin, destination);
+                        Console.Write("Origin: ");
+                        Position origin = Screen.ReadChessPosition().ToPosition();
+
+                        chessMatch.ValidateOrigin(origin);
+                        bool[,] possiblePositions = chessMatch.Board.Piece(origin).PossibleMoves();
+
+                        Console.Clear();
+                        Screen.PrintBoard(chessMatch.Board, possiblePositions);
+                        Console.WriteLine();
+
+                        Console.Write("Destination: ");
+                        Position destination = Screen.ReadChessPosition().ToPosition();
+
+                        chessMatch.ValidateDestination(origin, destination);
+
+                        chessMatch.MakePlay(origin, destination);
+                    }
+                    catch (BoardException e)
+                    {
+                        Console.WriteLine(e.Message);
+                        Console.ReadLine();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Unexpected error: {0}!", e.Message);
+                        Console.ReadLine();
+                    }
                 }
             }
             catch (BoardException e)

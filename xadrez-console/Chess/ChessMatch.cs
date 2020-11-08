@@ -4,16 +4,16 @@ namespace Chess
 {
     public class ChessMatch
     {
-        private int _Turn;
-        private Colors _ActualPlayer;
+        public  int Turn { get; private set; }
+        public  Colors ActualPlayer { get; private set; }
         public Board Board { get; private set; }
         public bool ended { get; private set; }
 
         public ChessMatch()
         {
             Board = new Board(8, 8);
-            _Turn = 1;
-            _ActualPlayer = Colors.White;
+            Turn = 1;
+            ActualPlayer = Colors.White;
             ended = false;
             PutPiece();
         }
@@ -26,6 +26,42 @@ namespace Chess
             Board.PutPiece(p, destination);
         }
 
+        public void MakePlay(Position origin, Position destination)
+        {
+            ExecuteMoviment(origin, destination);
+            Turn++;
+            SwitchPlayer();
+        }
+
+        public void ValidateOrigin(Position pos)
+        {
+            if (Board.Piece(pos) == null)
+            {
+                throw new BoardException("There is no piece in this position!");
+            }
+
+            if (Board.Piece(pos).Color != ActualPlayer)
+            {
+                throw new BoardException("The piece chosen is not yours!");
+            }
+
+            if (!Board.Piece(pos).ExistPossibleMoves())
+            {
+                throw new BoardException("The chosen piece has no possible movements!");
+            }
+        }
+
+        public void ValidateDestination(Position origin, Position destination)
+        {
+            if (!Board.Piece(origin).CanMoveFor(destination))
+            {
+                throw new BoardException("You cannot move to this position!");
+            }
+        }
+        private void SwitchPlayer()
+        {
+            ActualPlayer = ActualPlayer == Colors.White ? ActualPlayer = Colors.Black : ActualPlayer = Colors.White;
+        }
         private void PutPiece()
         {
             Board.PutPiece(new Rook(Colors.White, Board), new ChessPosition('c', 2).ToPosition());
