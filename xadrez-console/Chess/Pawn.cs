@@ -72,6 +72,8 @@ namespace Chess
                         mat[right.Line - 1, right.Column] = true;
                     }
                 }
+                
+                
             }
             else 
             {

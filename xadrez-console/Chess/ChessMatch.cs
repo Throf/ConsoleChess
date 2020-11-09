@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using BoardMain;
 
@@ -149,6 +150,45 @@ namespace Chess
                 RemakePlay(origin, destination, capturedPiece);
                 throw new BoardException("You can't put yourself in check");
             }
+            
+            Piece p = Board.Piece(destination);
+            
+            //#Promotion
+
+            if (p is Pawn)
+            {
+                if (p.Color == Colors.White && destination.Line == 0 || p.Color == Colors.Black && destination.Line == 7)
+                {
+                    p = Board.RemovePiece(destination);
+                    _pieces.Remove(p);
+                    
+                    Console.Write("Promotion: ('Q'|'K'|'B'|'R')");
+                    char promotion = char.Parse(Console.ReadLine());
+
+                    switch (promotion)
+                    {
+                        case 'q':
+                            p = new Queen(p.Color, Board);
+                            break;
+                        case 'k':
+                            p = new Knight(p.Color, Board);
+                            break;
+                        case 'b':
+                            p = new Bishop(ActualPlayer, Board);
+                            break;
+                        case 'r':
+                            p = new Rook(ActualPlayer, Board);
+                            break;
+                        default:
+                            p = new Queen(ActualPlayer, Board);
+                            break;
+                    }
+                    
+                    Board.PutPiece(p, destination);
+                    _pieces.Add(p);
+                }
+            }
+            
             if (IsInCheck(Adversary(ActualPlayer))) 
             {
                 Check = true;
@@ -167,8 +207,6 @@ namespace Chess
                 SwitchPlayer();
             }
 
-            Piece p = Board.Piece(destination);
-            
             //#EnPassant
             if (p is Pawn && (destination.Line == origin.Line + 2) || (destination.Line == origin.Line - 2))
             {
@@ -323,6 +361,7 @@ namespace Chess
             Board.PutPiece(piece, new ChessPosition(column, line).ToPosition());
             _pieces.Add(piece);
         }
+        
         private void PutPiece()
         {
             InsertNewPiece('a', 2, new Pawn(Colors.White, Board, this));
