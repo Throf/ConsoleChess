@@ -71,6 +71,12 @@ namespace Chess
             {
                 Check = false;
             }
+            if (CheckMate(Adversary(ActualPlayer))) 
+            {
+                Ended = true;
+                SwitchPlayer();
+            }
+
             Turn++;
             SwitchPlayer();
         }
@@ -120,6 +126,39 @@ namespace Chess
             }
 
             return false;
+        }
+
+        public bool CheckMate(Colors color) 
+        {
+            if (!IsInCheck(color)) 
+            {
+                return false;
+            }
+
+            foreach (Piece x in InGamePiece(color)) 
+            {
+                bool[,] mat = x.PossibleMoves();
+                for(int i = 0; i < Board.Lines; i++) 
+                {
+                    for(int j = 0; j < Board.Columns; j++) 
+                    {
+                        if (mat[i, j]) 
+                        {
+                            Position origin = x.Position;
+                            Position destination = new Position(i, j);
+                            Piece capturedPiece = ExecuteMoviment(origin, destination);
+                            bool testCheck = IsInCheck(color);
+                            RemakePlay(origin, destination, capturedPiece);
+                            if (!testCheck) 
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return true;
         }
 
         public void ValidateOrigin(Position pos)
@@ -187,20 +226,12 @@ namespace Chess
         }
         private void PutPiece()
         {
-            InsertNewPiece('c', 1, new Bishop(Colors.White,Board));
-            InsertNewPiece('d', 1, new King(Colors.White,Board));
-            InsertNewPiece('e', 1, new Bishop(Colors.White,Board));
-            InsertNewPiece('c', 2, new Rook(Colors.White,Board));
-            InsertNewPiece('d', 2, new Rook(Colors.White,Board));
-            InsertNewPiece('e', 2, new Rook(Colors.White,Board));
-            
-            InsertNewPiece('c', 8, new Bishop(Colors.Black,Board));
-            InsertNewPiece('d', 8, new King(Colors.Black,Board));
-            InsertNewPiece('e', 8, new Bishop(Colors.Black,Board));
-            InsertNewPiece('c', 7, new Rook(Colors.Black,Board));
-            InsertNewPiece('d', 7, new Rook(Colors.Black,Board));
-            InsertNewPiece('e', 7, new Rook(Colors.Black,Board));
-            
+            InsertNewPiece('d', 1, new King(Colors.White, Board));
+            InsertNewPiece('c', 1, new Rook(Colors.White, Board));
+            InsertNewPiece('h', 7, new Rook(Colors.White, Board));
+
+            InsertNewPiece('a', 8, new King(Colors.Black, Board));
+            InsertNewPiece('b', 8, new Rook(Colors.Black, Board));
         }
     }
 }

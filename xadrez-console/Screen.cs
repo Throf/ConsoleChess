@@ -82,10 +82,20 @@ namespace xadrez_console
             Console.WriteLine();
             
             Console.WriteLine("Turn: " + chessMatch.Turn);
-            Console.WriteLine("Waiting for: " + chessMatch.ActualPlayer);
-            if (chessMatch.Check)
+
+            if (!chessMatch.Ended)
             {
-                Console.WriteLine("CHECK!");
+                Console.WriteLine("Waiting for: " + chessMatch.ActualPlayer);
+                if (chessMatch.Check)
+                {
+                    Console.WriteLine("CHECK!");
+                }
+            }
+            else 
+            {
+                Console.WriteLine();
+                Console.WriteLine("CHECKMATE!");
+                Console.WriteLine("Winner: " + chessMatch.ActualPlayer);
             }
         }
 
