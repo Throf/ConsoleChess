@@ -5,13 +5,15 @@ namespace Chess
 {
     public class ChessMatch
     {
-        public  int Turn { get; private set; }
+        private HashSet<Piece> _pieces;
+        private HashSet<Piece> _capturedPiece;
+        
+
+        public int Turn { get; private set; }
         public  Colors ActualPlayer { get; private set; }
         public Board Board { get; private set; }
         public bool Ended { get; private set; }
-
-        private HashSet<Piece> _pieces;
-        private HashSet<Piece> _capturedPiece;
+        public bool Check { get; private set; }
 
         public ChessMatch()
         {
@@ -21,10 +23,11 @@ namespace Chess
             Ended = false;
             _pieces = new HashSet<Piece>();
             _capturedPiece = new HashSet<Piece>();
+            Check = false;
             PutPiece();
         }
 
-        public void ExecuteMoviment(Position origin, Position destination)
+        public Piece ExecuteMoviment(Position origin, Position destination)
         {
             Piece p = Board.RemovePiece(origin);
             p.IncreaseMovement();
@@ -34,13 +37,89 @@ namespace Chess
             {
                 _capturedPiece.Add(capturedPiece);
             }
+
+            return capturedPiece;
+        }
+
+        public void RemakePlay(Position origin, Position destination, Piece capturedPiece)
+        {
+            Piece p = Board.RemovePiece(destination);
+            p.DecreaseMovement();
+            if(capturedPiece != null) 
+            {
+                Board.PutPiece(capturedPiece, destination);
+                _capturedPiece.Remove(capturedPiece);
+            }
+
+            Board.PutPiece(p, origin);
         }
 
         public void MakePlay(Position origin, Position destination)
         {
-            ExecuteMoviment(origin, destination);
+            Piece capturedPiece = ExecuteMoviment(origin, destination);
+
+            if (IsInCheck(ActualPlayer)) 
+            {
+                RemakePlay(origin, destination, capturedPiece);
+                throw new BoardException("You can't put yourself in check");
+            }
+            if (IsInCheck(Adversary(ActualPlayer))) 
+            {
+                Check = true;
+            }
+            else
+            {
+                Check = false;
+            }
             Turn++;
             SwitchPlayer();
+        }
+
+        
+
+        private Colors Adversary(Colors color) 
+        {
+            if(color == Colors.White) 
+            {
+                return Colors.Black;
+            }
+            else 
+            {
+                return Colors.White;
+            }
+        }
+
+        private Piece King(Colors color) 
+        {
+            foreach (Piece x in InGamePiece(color)) 
+            {
+                if(x is King) 
+                {
+                    return x;
+                }
+            }
+
+            return null;
+        }
+
+        public bool IsInCheck(Colors color) 
+        {
+            Piece K = King(color);
+            if(K == null) 
+            {
+                throw new BoardException("There's no King in the game");
+            }
+
+            foreach(Piece x in InGamePiece(Adversary(color))) 
+            {
+                bool[,] mat = x.PossibleMoves();
+                if (mat[K.Position.Line, K.Position.Column]) 
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public void ValidateOrigin(Position pos)
